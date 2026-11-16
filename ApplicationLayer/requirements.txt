@@ -1,6 +1,5 @@
-urllib3==1.26.18
-boto3
 Flask
 Flask-SQLAlchemy
 mysql-connector-python
+gunicorn
 requests

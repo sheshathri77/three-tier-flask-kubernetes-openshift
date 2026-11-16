@@ -1,22 +1,27 @@
+
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response
-import urllib.request, json
 import requests
 
 app = Flask(__name__)
 
+BACKEND_URL = os.getenv("BACKEND_URL", "http://backend:4000")
+
 
 @app.route('/')
 def index():
-    todos={}
+    todos = {}
 
     try:
-        url = "http://localhost/api/"
-        response = requests.get(url, timeout=60)
-        todos = json.loads(response.content)
-    except Exception as ex:
-        exc = str(ex)
+        response = requests.get(f"{BACKEND_URL}/", timeout=10)
+        response.raise_for_status()
+        todos = response.json()
+
+    except requests.RequestException as ex:
+        print(f"Backend connection error: {ex}")
 
     return render_template('index.html', todos=todos)
 
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=8000)
